@@ -1,71 +1,81 @@
+/* FONT FUTURISTICO */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
 body {
   background: #000;
   color: #fff;
   font-family: 'Orbitron', sans-serif;
   padding: 15px;
+  overflow-x: hidden;
 }
 
+/* GLOW GENERALE */
+* {
+  text-shadow: 0 0 4px #00aaff;
+}
+
+/* TITOLO HUD */
 .hud-title {
   text-align: center;
   font-size: 22px;
   color: #00aaff;
   margin-bottom: 20px;
+  text-shadow: 0 0 10px #00aaff;
 }
 
+/* PANNELLI */
 .panel {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.4);
   border: 1px solid #00aaff;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 12px #003355 inset;
+  animation: panelFade 0.6s ease;
 }
 
+@keyframes panelFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* TITOLI PANNELLI */
 .panel-title {
   font-size: 18px;
   color: #ff6a00;
   cursor: pointer;
+  text-shadow: 0 0 8px #ff6a00;
 }
 
+/* CONTENUTO COLLASSABILE */
 .panel-content {
   display: none;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
+/* PROGRESS BAR HUD */
 .metric {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .bar {
-  display: inline-block;
-  height: 10px;
+  display: block;
+  height: 12px;
   width: 0%;
   background: linear-gradient(90deg, #ff6a00, #00aaff);
-  border-radius: 5px;
-  transition: width 1s;
+  border-radius: 6px;
+  box-shadow: 0 0 10px #00aaff;
+  transition: width 1.2s ease;
 }
 
+/* BOTTONI SETTIMANE */
 .week-btn {
   width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  background: #00aaff;
-  border: none;
-  color: #000;
+  padding: 12px;
+  margin: 6px 0;
+  background: rgba(0, 170, 255, 0.2);
+  border: 1px solid #00aaff;
+  color: #00aaff;
   font-weight: bold;
-  border-radius: 6px;
-}
-
-.hidden {
-  display: none;
-}
-
-.close-btn {
-  width: 100%;
-  padding: 10px;
-  background: #ff6a00;
-  border: none;
-  color: #000;
-  font-weight: bold;
-  border-radius: 6px;
-  margin-top: 10px;
-}
+  border-radius: 8px;
+  text-shadow
