@@ -1,7 +1,7 @@
 {
   "name": "Jarvis Weekly Command Center",
   "short_name": "Jarvis HUD",
-  "start_url": "/jarvis-dashboard-pwa/",
+  "start_url": "/Allenamenti/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
