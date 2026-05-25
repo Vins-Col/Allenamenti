@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IRON_HUD_v2.0 | Core Biometrics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0e0e0e;
+            color: #e2e2e2;
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: hidden;
+        }
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0, 251, 251, 0) 0%, rgba(0, 251, 251, 0.05) 50%, rgba(0, 251, 251, 0) 100%);
+            opacity: 0.1;
+            position: fixed;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
+        }
+        @keyframes scanline {
+            0% { top: -100px; }
+            100% { top: 100%; }
+        }
+        .holographic-card {
+            backdrop-filter: blur(12px);
+            background: rgba(19, 19, 19, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        .holographic-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 251, 251, 0.03) 3px);
+            pointer-events: none;
+        }
+        .corner-accent {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-color: #00fbfb;
+        }
+        .chamfer-btn {
+            clip-path: polygon(0 0, 90% 0, 100% 30%, 100% 100%, 0 100%);
+        }
+        .glitch-text {
+            animation: glitch 3s infinite;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 #ff5540, -2px 0 #00fbfb; }
+            5% { text-shadow: -2px 0 #ff5540, 2px 0 #00fbfb; }
+            10% { text-shadow: 0 0 transparent; }
+        }
+        .bar-segment {
+            height: 12px;
+            width: 4px;
+            margin-right: 2px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#ff5540",
+                      "tertiary-container": "#929090",
+                      "on-secondary-fixed": "#002020",
+                      "surface-dim": "#131313",
+                      "on-tertiary-container": "#2a2a2a",
+                      "surface-container-low": "#1b1b1b",
+                      "on-error": "#690005",
+                      "on-primary-container": "#5c0000",
+                      "on-secondary": "#003737",
+                      "error-container": "#93000a",
+                      "on-secondary-container": "#007070",
+                      "on-tertiary": "#313030",
+                      "on-primary-fixed-variant": "#930100",
+                      "background": "#131313",
+                      "inverse-on-surface": "#303030",
+                      "on-background": "#e2e2e2",
+                      "tertiary-fixed": "#e5e2e1",
+                      "on-secondary-fixed-variant": "#004f4f",
+                      "tertiary": "#c8c6c5",
+                      "secondary-fixed-dim": "#00dddd",
+                      "outline-variant": "#603e39",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "surface-tint": "#ffb4a8",
+                      "secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#c8c6c5",
+                      "on-tertiary-fixed-variant": "#474746",
+                      "secondary-fixed": "#00fbfb",
+                      "surface": "#131313",
+                      "outline": "#b18780",
+                      "surface-bright": "#393939",
+                      "surface-variant": "#353535",
+                      "error": "#ffb4ab",
+                      "surface-container-highest": "#353535",
+                      "on-surface": "#e2e2e2",
+                      "on-error-container": "#ffdad6",
+                      "secondary-container": "#00fbfb",
+                      "inverse-primary": "#c00100",
+                      "surface-container-high": "#2a2a2a",
+                      "surface-container": "#1f1f1f",
+                      "on-primary-fixed": "#410000",
+                      "on-tertiary-fixed": "#1c1b1b",
+                      "primary": "#ffb4a8",
+                      "surface-container-lowest": "#0e0e0e",
+                      "inverse-surface": "#e2e2e2",
+                      "on-primary": "#690100",
+                      "on-surface-variant": "#ebbbb4",
+                      "primary-fixed": "#ffdad4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-padding": "12px",
+                      "unit": "4px",
+                      "margin": "20px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["JetBrains Mono"],
+                      "headline-md": ["Space Grotesk"],
+                      "display-lg": ["Space Grotesk"],
+                      "label-caps": ["JetBrains Mono"],
+                      "data-lg": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "label-caps": ["10px", {"lineHeight": "1.2", "letterSpacing": "0.2em", "fontWeight": "700"}],
+                      "data-lg": ["32px", {"lineHeight": "1.0", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background">
+<div class="scanline"></div>
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full border-b border-primary-container/30 bg-surface/10 backdrop-blur-xl z-50 flex justify-between items-center px-container-padding h-16 shadow-[0_0_15px_rgba(255,85,64,0.2)]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">monitor_heart</span>
+<span class="font-headline-md text-headline-md tracking-widest uppercase text-primary-container italic">IRON_HUD_v2.0</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-4">
+<span class="font-label-caps text-label-caps text-primary cursor-pointer hover:bg-primary-container/10 transition-colors px-2 py-1">CALIBRATION</span>
+<span class="font-label-caps text-label-caps text-secondary-fixed border-b-2 border-secondary-fixed cursor-pointer px-2 py-1">BIOMETRICS</span>
+<span class="font-label-caps text-label-caps text-tertiary-container cursor-pointer hover:bg-primary-container/10 transition-colors px-2 py-1">ARSENAL</span>
+</div>
+<span class="material-symbols-outlined text-primary-container">battery_charging_full</span>
+</div>
+</header>
+<main class="mt-24 mb-24 px-margin max-w-7xl mx-auto space-y-gutter">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-end gap-4 border-l-4 border-secondary-fixed pl-4">
+<div>
+<h1 class="font-display-lg text-display-lg text-secondary-fixed uppercase leading-tight">CORE (G2/G6)<br/><span class="text-on-surface opacity-80">STABILIZATION</span></h1>
+<p class="font-label-caps text-label-caps text-tertiary-container mt-2">SYSTEM CLASSIFICATION: CLASS-A AUGMENTED INTERFACE</p>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-secondary-fixed blink">LIVE TELEMETRY</p>
+<p class="font-data-lg text-data-lg text-secondary-fixed">88<span class="text-body-md font-body-md text-on-surface ml-1">% SYNC</span></p>
+</div>
+</div>
+<!-- Bento Grid Main Content -->
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter">
+<!-- Performance Progress Tracks -->
+<div class="md:col-span-2 lg:col-span-2 holographic-card p-6 border border-secondary-fixed/30 group">
+<div class="corner-accent top-0 left-0 border-t border-l"></div>
+<div class="corner-accent bottom-0 right-0 border-b border-r"></div>
+<h3 class="font-label-caps text-label-caps text-secondary-fixed mb-6 tracking-[0.3em]">CALIBRATION PROTOCOLS</h3>
+<div class="space-y-8">
+<!-- Plank -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md text-body-md text-on-surface">PLANK (60S)</span>
+<span class="font-data-lg text-data-lg text-secondary-fixed">48<span class="text-label-caps opacity-50 ml-1">SEC</span></span>
+</div>
+<div class="flex w-full">
+<script>
+                                for(let i=0; i<20; i++) {
+                                    const opacity = i < 16 ? 'bg-secondary-fixed' : 'bg-secondary-fixed/20 border border-secondary-fixed/40';
+                                    document.write(`<div class="bar-segment flex-1 ${opacity}"></div>`);
+                                }
+                            </script>
+</div>
+</div>
+<!-- Crunch -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md text-body-md text-on-surface">CRUNCH (20 REPS)</span>
+<span class="font-data-lg text-data-lg text-secondary-fixed">14<span class="text-label-caps opacity-50 ml-1">REPS</span></span>
+</div>
+<div class="flex w-full">
+<script>
+                                for(let i=0; i<20; i++) {
+                                    const opacity = i < 14 ? 'bg-secondary-fixed' : 'bg-secondary-fixed/20 border border-secondary-fixed/40';
+                                    document.write(`<div class="bar-segment flex-1 ${opacity}"></div>`);
+                                }
+                            </script>
+</div>
+</div>
+<!-- Mountain Climber -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md text-body-md text-on-surface">MTN. CLIMBER (30S)</span>
+<span class="font-data-lg text-data-lg text-secondary-fixed">21<span class="text-label-caps opacity-50 ml-1">SEC</span></span>
+</div>
+<div class="flex w-full">
+<script>
+                                for(let i=0; i<20; i++) {
+                                    const opacity = i < 14 ? 'bg-secondary-fixed' : 'bg-secondary-fixed/20 border border-secondary-fixed/40';
+                                    document.write(`<div class="bar-segment flex-1 ${opacity}"></div>`);
+                                }
+                            </script>
+</div>
+</div>
+</div>
+</div>
+<!-- Historical Chart: Fiato/Resistenza -->
+<div class="md:col-span-1 lg:col-span-2 holographic-card p-6 border border-primary-container/30">
+<div class="corner-accent top-0 left-0 border-t border-l border-primary-container"></div>
+<div class="corner-accent top-0 right-0 border-t border-r border-primary-container"></div>
+<h3 class="font-label-caps text-label-caps text-primary-container mb-6 tracking-[0.3em]">FIATO / RESISTENZA TREND</h3>
+<div class="relative h-64 w-full flex items-end gap-2 border-b border-l border-primary-container/20 p-2">
+<!-- Background Grid -->
+<div class="absolute inset-0 grid grid-rows-4 pointer-events-none">
+<div class="border-b border-primary-container/5"></div>
+<div class="border-b border-primary-container/5"></div>
+<div class="border-b border-primary-container/5"></div>
+<div class="border-b border-primary-container/5"></div>
+</div>
+<!-- Bars -->
+<div class="flex-1 bg-primary-container/10 h-[20%] border-t border-primary-container/40"></div>
+<div class="flex-1 bg-primary-container/20 h-[35%] border-t border-primary-container/50"></div>
+<div class="flex-1 bg-primary-container/30 h-[45%] border-t border-primary-container/60"></div>
+<div class="flex-1 bg-primary-container/40 h-[60%] border-t border-primary-container/70"></div>
+<div class="flex-1 bg-primary-container/60 h-[75%] border-t border-primary-container/80 shadow-[0_0_15px_rgba(255,85,64,0.3)]"></div>
+<div class="flex-1 bg-primary-container h-[90%] border-t border-primary-container shadow-[0_0_20px_rgba(255,85,64,0.5)]"></div>
+<!-- Tooltip Style Label -->
+<div class="absolute right-4 top-4 text-right">
+<span class="font-data-lg text-data-lg text-primary-container">+14%</span>
+<p class="font-label-caps text-label-caps opacity-50">DELTA GROWTH</p>
+</div>
+</div>
+<div class="flex justify-between mt-4">
+<span class="font-label-caps text-label-caps text-tertiary-container">LOG_01</span>
+<span class="font-label-caps text-label-caps text-tertiary-container">LOG_06 (CURRENT)</span>
+</div>
+</div>
+<!-- System Diagnostics -->
+<div class="md:col-span-full holographic-card p-6 border border-on-tertiary-container/50 grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="md:col-span-1 flex flex-col justify-center items-center border-r border-on-tertiary-container/30">
+<div class="w-20 h-20 rounded-full border-4 border-secondary-fixed flex items-center justify-center mb-2 shadow-[0_0_15px_rgba(0,251,251,0.2)]">
+<span class="material-symbols-outlined text-4xl text-secondary-fixed">memory</span>
+</div>
+<p class="font-label-caps text-label-caps text-secondary-fixed">HARDWARE STATUS: OK</p>
+</div>
+<div class="md:col-span-3">
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-label-caps text-label-caps text-on-surface">SYSTEM_DIAGNOSTICS_VIEW.EXE</h4>
+<span class="font-label-caps text-label-caps text-primary-container animate-pulse text-[8px]">ACTIVE_ENCRYPTION_ENABLED</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="p-3 border border-on-tertiary-container/20 bg-surface-container-lowest">
+<p class="text-[8px] font-label-caps text-tertiary-container">LATTICE_SYNC</p>
+<p class="font-body-md text-secondary-fixed">STABLE</p>
+</div>
+<div class="p-3 border border-on-tertiary-container/20 bg-surface-container-lowest">
+<p class="text-[8px] font-label-caps text-tertiary-container">THERMAL_REG</p>
+<p class="font-body-md text-on-surface">36.6°C</p>
+</div>
+<div class="p-3 border border-on-tertiary-container/20 bg-surface-container-lowest">
+<p class="text-[8px] font-label-caps text-tertiary-container">NEURAL_LOAD</p>
+<p class="font-body-md text-on-surface">12.4ms</p>
+</div>
+<div class="p-3 border border-on-tertiary-container/20 bg-surface-container-lowest">
+<p class="text-[8px] font-label-caps text-tertiary-container">POWER_CELL</p>
+<p class="font-body-md text-secondary-fixed">OPTIMAL</p>
+</div>
+</div>
+<div class="mt-4 bg-black/40 p-2 font-mono text-[10px] text-tertiary-container overflow-hidden whitespace-nowrap opacity-50">
+                        [SYS] INIT_CORE_STABILIZATION... SUCCESS. [SYS] ALLOCATING G2_RESOURCES... SUCCESS. [SYS] CALIBRATING MOTION_SENSORS... OK. [SYS] HEART_RATE_VARIABILITY... TRACKING.
+                    </div>
+</div>
+</div>
+<!-- Image Visual Module -->
+<div class="md:col-span-full lg:col-span-4 h-64 holographic-card border border-secondary-fixed/20 relative">
+<img class="w-full h-full object-cover opacity-40 grayscale contrast-125" data-alt="A high-contrast cinematic shot of a person doing a core workout in a dark, high-tech industrial gym. The scene is illuminated by glowing cyan and red neon light strips that mimic the HUD elements. The atmosphere is intense and futuristic, with floating digital interface overlays and dust motes dancing in the light rays. The visual style is aggressive and high-performance, with deep blacks and vibrant holographic highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDh4a3mXLjbrovRO4VPexG9fFTxjip-BH6QMWArze71dj-GfDJcGSycd8rBiabQOyHpWHpMrEHIipRGw55YrjETS0kXDOzDFATUURs6vOOrf8_mLjYJ14yAby4oVjZEW7e9ykGz0LKbiYnNr8I2kFp5WPhFXVlVUCsLpyXbcNW08E9I_POrsuinXvmdfj4CE1J1AJEis-TKVItgAXIXqMQlDn6GiYqwqBE94EFnf_BH_OniDa0ehtHqo58DC1bGm-XDgpbA7Uf01BE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<button class="chamfer-btn bg-primary-container text-on-primary-fixed font-headline-md text-body-md px-8 py-3 flex items-center gap-2 hover:scale-105 transition-transform active:scale-95 shadow-[0_0_20px_rgba(255,85,64,0.4)]">
+                        CALIBRATE SYSTEM
+                        <span class="material-symbols-outlined">bolt</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-8 pb-safe bg-surface-container-lowest/80 backdrop-blur-md border-t border-secondary-container/20 shadow-[0_-5px_20px_rgba(0,251,251,0.15)]">
+<div class="flex flex-col items-center justify-center text-tertiary-container opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined">home_max</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary-fixed drop-shadow-[0_0_8px_rgba(0,251,251,0.8)] border-b-2 border-secondary-fixed pb-1 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+</div>
+<div class="flex flex-col items-center justify-center text-tertiary-container opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined">query_stats</span>
+</div>
+<div class="flex flex-col items-center justify-center text-tertiary-container opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined">settings_input_component</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for the blinker
+        setInterval(() => {
+            const blinks = document.querySelectorAll('.blink');
+            blinks.forEach(el => {
+                el.style.opacity = el.style.opacity === '0' ? '1' : '0';
+            });
+        }, 800);
+
+        // Simulated data shift
+        setInterval(() => {
+            const dataPoint = document.querySelector('.font-data-lg.text-secondary-fixed');
+            if (dataPoint && dataPoint.innerText.includes('%')) {
+               let val = parseInt(dataPoint.innerText);
+               if(Math.random() > 0.5) val += Math.floor(Math.random() * 2);
+               else val -= Math.floor(Math.random() * 2);
+               dataPoint.innerHTML = `${Math.min(100, Math.max(80, val))}<span class="text-body-md font-body-md text-on-surface ml-1">% SYNC</span>`;
+            }
+        }, 3000);
+    </script>
+</body></html>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js');
+  });
+}
+</script>
