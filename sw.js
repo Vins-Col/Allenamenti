@@ -1,7 +1,11 @@
-const CACHE_NAME = 'jarvis-hud-cache-v1';
+const CACHE_NAME = 'allenamenti-cache-v1';
+
 const URLS_TO_CACHE = [
-  '/jarvis-dashboard-pwa/',
-  '/jarvis-dashboard-pwa/index.html'
+  '/Allenamenti/',
+  '/Allenamenti/index.html',
+  '/Allenamenti/manifest.webmanifest',
+  '/Allenamenti/icons/icon-192.png',
+  '/Allenamenti/icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
@@ -12,6 +16,8 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(resp => resp || fetch(event.request))
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
   );
 });
