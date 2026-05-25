@@ -1,0 +1,71 @@
+body {
+  background: #000;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  padding: 15px;
+}
+
+.hud-title {
+  text-align: center;
+  font-size: 22px;
+  color: #00aaff;
+  margin-bottom: 20px;
+}
+
+.panel {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #00aaff;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+.panel-title {
+  font-size: 18px;
+  color: #ff6a00;
+  cursor: pointer;
+}
+
+.panel-content {
+  display: none;
+  margin-top: 10px;
+}
+
+.metric {
+  margin-bottom: 10px;
+}
+
+.bar {
+  display: inline-block;
+  height: 10px;
+  width: 0%;
+  background: linear-gradient(90deg, #ff6a00, #00aaff);
+  border-radius: 5px;
+  transition: width 1s;
+}
+
+.week-btn {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  background: #00aaff;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.hidden {
+  display: none;
+}
+
+.close-btn {
+  width: 100%;
+  padding: 10px;
+  background: #ff6a00;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  border-radius: 6px;
+  margin-top: 10px;
+}
